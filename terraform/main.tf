@@ -99,4 +99,3 @@ resource "azurerm_role_assignment" "reader_assignment" {
   scope                = "/subscriptions/d33de279-da28-4bb7-9317-f0a6d2fc6ab1" # The scope at which the role assignment applies, here it's the entire subscription.
 }
 
-

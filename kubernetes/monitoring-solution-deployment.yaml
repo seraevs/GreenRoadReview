@@ -1,4 +1,4 @@
-monitoring-solution-deployment.yaml# This section is the header of the Kubernetes manifest file, defining the kind of Kubernetes object (Deployment) and its API version.
+# This section is the header of the Kubernetes manifest file, defining the kind of Kubernetes object (Deployment) and its API version.
 apiVersion: apps/v1
 kind: Deployment
 
