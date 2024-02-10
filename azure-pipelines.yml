@@ -1,0 +1,52 @@
+trigger:
+- main # Specifies the branch that will trigger the pipeline, in this case, the 'main' branch.
+
+pool:
+  vmImage: 'ubuntu-latest' # Specifies the virtual machine image to use for the pipeline, here it's the latest Ubuntu.
+
+variables:
+  terraformPath: '$(Build.SourcesDirectory)/terraform' # Defines the path to Terraform scripts within the source directory.
+  kubernetesPath: '$(Build.SourcesDirectory)/kubernetes' # Defines the path to Kubernetes configuration files within the source directory.
+  terraformVersion: '3.1.x' # Specifies the version of .NET Core SDK to use, likely a typo and should be Terraform version.
+
+stages:
+- stage: TerraformProvisioning # First stage for provisioning infrastructure using Terraform.
+  jobs:
+  - job: ProvisionEC2
+    displayName: 'Provision EC2 with Terraform' # Display name for the job in the UI.
+    steps:
+    - checkout: self # Checks out the source code of the repository.
+
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core sdk' # Likely a typo, this step is supposed to set up the Terraform environment.
+      inputs:
+        packageType: 'sdk'
+        version: '$(terraformVersion)'
+
+    - script: |
+        cd $(terraformPath)
+        terraform init -reconfigure # Initializes Terraform, reconfiguring any backend.
+        terraform apply -auto-approve # Applies Terraform configurations without manual approval.
+      displayName: 'Terraform Apply'
+
+- stage: KubernetesDeployment # Second stage for deploying services using Kubernetes.
+  jobs:
+  - job: DeployServices
+    displayName: 'Deploy Services with Kubernetes' # Display name for the job in the UI.
+    steps:
+    - checkout: self # Checks out the source code of the repository.
+
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core sdk' # Again, likely a typo; this task might not be necessary for Kubernetes deployment.
+      inputs:
+        packageType: 'sdk'
+        version: '$(terraformVersion)'
+
+    - script: |
+        # Set up minikube
+        # Deploy Kubernetes manifests for web site and monitoring solution
+        cd $(kubernetesPath)
+        minikube start # Starts a minikube cluster.
+        kubectl apply -f web-site-deployment.yaml # Applies the Kubernetes manifest for the web site.
+        kubectl apply -f monitoring-solution-deployment.yaml # Applies the Kubernetes manifest for the monitoring solution.
+      displayName: 'Deploy Services with Kubernetes'
