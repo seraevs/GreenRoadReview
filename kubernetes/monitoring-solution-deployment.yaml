@@ -1,30 +1,55 @@
-# This section is the header of the Kubernetes manifest file, defining the kind of Kubernetes object (Deployment) and its API version.
+# Deployment definition for monitoring solution
 apiVersion: apps/v1
 kind: Deployment
-
-# The metadata section provides details about the deployment object, such as its name.
 metadata:
-  name: monitoring-solution-deployment # The name of the deployment.
-
-# The spec (specification) section defines the desired state of the deployment.
+  name: monitoring-solution-deployment # Unique name for the deployment
 spec:
-  replicas: 1 # Specifies the number of pod replicas. Here, it's set to 1, meaning only one pod will be created for this deployment.
-
-  # The selector field defines how the deployment finds which pods to manage. In this case, it matches labels.
+  replicas: 1 # Number of pod replicas to maintain
   selector:
     matchLabels:
-      app: monitoring-solution # The deployment manages pods with the label 'app' set to 'monitoring-solution'.
-
-  # The template field contains the template for the pods the deployment manages.
+      app: monitoring-solution # Selector to identify the pods managed by this deployment
   template:
     metadata:
       labels:
-        app: monitoring-solution # Labels applied to pods created from this template, matching the selector above.
-
-    # The spec within the template defines the configuration of the pods.
+        app: monitoring-solution # Labels applied to the pods created by this deployment
     spec:
       containers:
-      - name: grafana-container # Name of the container within the pod.
-        image: grafana/grafana:latest # The Docker image for the container, here it's the latest Grafana image.
+      - name: grafana-container # Container for Grafana
+        image: grafana/grafana:latest # Use the latest Grafana image
         ports:
-        - containerPort: 3000 # The container port that Grafana listens on. This should be accessible within the cluster.
+        - containerPort: 3000 # Grafana listens on port 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD # Set Grafana admin password via environment variable
+          value: "securepassword" # Replace 'securepassword' with your desired password
+
+      - name: prometheus-container # Container for Prometheus
+        image: prom/prometheus:latest # Use the latest Prometheus image
+        ports:
+        - containerPort: 9090 # Prometheus listens on port 9090
+        volumeMounts: # Mount volumes for Prometheus configuration and data storage
+        - name: prometheus-config-volume
+          mountPath: /etc/prometheus/prometheus.yml # Mount path for Prometheus config
+          subPath: prometheus.yml # Subpath for the specific config file
+        - name: prometheus-data-volume
+          mountPath: /prometheus # Mount path for Prometheus data
+
+      volumes: # Define volumes used by Prometheus container
+      - name: prometheus-config-volume
+        configMap:
+          name: prometheus-config # Name of the ConfigMap containing Prometheus config
+      - name: prometheus-data-volume
+        emptyDir: {} # Temporary storage for Prometheus data, deleted when pod is removed
+
+# ConfigMap definition for Prometheus configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config # Unique name for the ConfigMap
+data:
+  prometheus.yml: | # Prometheus configuration in YAML format
+    global:
+      scrape_interval: 15s # Interval for scraping metrics
+    scrape_configs:
+      - job_name: 'prometheus' # Job name for scraping Prometheus metrics
+        static_configs:
+          - targets: ['localhost:9090'] # Targets to scrape, Prometheus itself in this case

@@ -1,22 +1,29 @@
-# Header specifying the API version and the kind of Kubernetes object, which is a Service in this case.
+# Service definition for Grafana
 apiVersion: v1
 kind: Service
-
-# Metadata section provides details about the Service, such as its name.
 metadata:
-  name: monitoring-solution-service # Name of the Service.
-
-# The specification (spec) section defines the desired state of the Service.
+  name: grafana-service # Unique name for the Grafana service
 spec:
-  # Selector determines how the Service finds the pods it provides access to, based on labels.
   selector:
-    app: monitoring-solution # The Service routes traffic to pods with the label 'app' set to 'monitoring-solution', matching the deployment.
-
-  # Ports section defines the network ports configuration for the Service.
+    app: monitoring-solution # Selector matching the labels of the pods to target
   ports:
-    - protocol: TCP # The network protocol used by the Service (TCP in this case).
-      port: 3000 # The port on which the Service is exposed. External traffic to the Service on this port is forwarded to targetPort of the pods.
-      targetPort: 3000 # The port on the pod to forward traffic to, matching the containerPort defined in the deployment.
+  - protocol: TCP # Network protocol used by the service
+    port: 80 # Port the service listens on
+    targetPort: 3000 # Target port on the pod (Grafana listens on 3000)
+  type: LoadBalancer # Expose the service outside the cluster using a cloud provider's load balancer
 
-  # Type of the Service, which determines how it is exposed. LoadBalancer exposes the Service externally through a cloud provider's load balancer.
-  type: LoadBalancer
+---
+
+# Service definition for Prometheus
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service # Unique name for the Prometheus service
+spec:
+  selector:
+    app: monitoring-solution # Selector matching the labels of the pods to target
+  ports:
+  - protocol: TCP # Network protocol used by the service
+    port: 9090 # Port the service listens on, matching Prometheus' default port
+    targetPort: 9090 # Target port on the pod (Prometheus listens on 9090)
+  type: LoadBalancer # Expose the service outside the cluster using a cloud provider's load balancer

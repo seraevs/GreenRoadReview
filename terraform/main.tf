@@ -99,3 +99,27 @@ resource "azurerm_role_assignment" "reader_assignment" {
   scope                = "/subscriptions/d33de279-da28-4bb7-9317-f0a6d2fc6ab1" # The scope at which the role assignment applies, here it's the entire subscription.
 }
 
+# Output for the allocated IP address of the NAT Gateway's public IP
+output "nat_gateway_public_ip_address" {
+  value       = azurerm_public_ip.nat_ip_1.ip_address
+  description = "The allocated IP address for the NAT Gateway's public IP."
+}
+
+# Output for the ID of the NAT Gateway's public IP resource
+output "nat_gateway_public_ip_id" {
+  value       = azurerm_public_ip.nat_ip_1.id
+  description = "The resource ID for the NAT Gateway's public IP."
+}
+
+# Output Blocks 
+output "nat_gateway_id" {
+  value = azurerm_nat_gateway.nat_gw_1.id
+  description = "The ID of the NAT Gateway"
+}
+
+output "nat_gateway_public_ip" {
+  value = azurerm_public_ip.nat_ip_1.ip_address
+  description = "The public IP address associated with the NAT Gateway"
+}
+
+

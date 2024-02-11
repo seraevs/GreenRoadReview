@@ -1,0 +1,27 @@
+# Custom values for kube-prometheus-stack Helm chart
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false  # Allows Prometheus to discover ServiceMonitors outside of its Helm release
+    serviceMonitors:
+      - name: custom-service-monitor  # Name of your custom ServiceMonitor
+
+alertmanager:
+  enabled: true  # Enable Alertmanager; adjust as needed
+
+grafana:
+  enabled: true  # Enable Grafana for dashboard visualization
+
+prometheus-node-exporter:
+  enabled: true  # Ensure Node Exporter is enabled to collect node metrics
+
+kubeStateMetrics:
+  enabled: true  # Enable kube-state-metrics for Kubernetes object metrics
+
+coreDns:
+  enabled: true  # Enable monitoring of CoreDNS; adjust based on your cluster setup
+
+kubeControllerManager:
+  enabled: true  # Enable monitoring of the Kubernetes Controller Manager; adjust as needed
+
+kubeScheduler:
+  enabled: true  # Enable monitoring of the Kubernetes Scheduler; adjust as needed

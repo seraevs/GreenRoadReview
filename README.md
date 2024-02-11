@@ -63,7 +63,7 @@
 # Troubleshooting
         Terraform Errors: Verify Azure service principal permissions and ensure all required fields in the Terraform configuration are correctly filled out.
         Kubernetes Deployment Issues: Check the logs of Kubernetes pods and services. Use kubectl describe and kubectl logs commands for detailed diagnostics.
-        Service Access: If encounter issues accessing the web application or Grafana dashboard, 
+        Service Access: If you encounter issues accessing the web application or Grafana dashboard, 
         verify the LoadBalancer services in Kubernetes and ensure your network security rules in Azure allow traffic to the designated ports.
 
         For more detailed guidance and troubleshooting, refer to Azure and Kubernetes documentation, 

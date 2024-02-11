@@ -1,0 +1,14 @@
+# Custom ServiceMonitor for Prometheus to monitor a custom service
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: custom-service-monitor  # Unique name for the ServiceMonitor resource
+  labels:
+    release: prom-operator  # Ensure this matches the label of your Prometheus Operator release
+spec:
+  selector:
+    matchLabels:
+      <label-key>: <label-value>  # Labels that select the service to monitor
+  endpoints:
+  - port: <metrics-port-name>  # Name of the port in your service that exposes metrics
+    interval: 30s  # Scrape interval; adjust as needed
