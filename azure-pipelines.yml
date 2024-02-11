@@ -27,6 +27,7 @@ stages:
     - script: |
         cd $(terraformPath)
         terraform init -reconfigure # Initializes Terraform, reconfiguring any backend.
+        terraform plan -out=tfplan # This is the main command for generating an execution plan.
         terraform apply -auto-approve # Applies Terraform configurations without manual approval.
       displayName: 'Terraform Apply'
 

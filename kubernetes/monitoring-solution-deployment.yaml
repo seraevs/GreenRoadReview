@@ -41,6 +41,7 @@ spec:
         emptyDir: {} # Temporary storage for Prometheus data, deleted when pod is removed
 
 # ConfigMap definition for Prometheus configuration
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:

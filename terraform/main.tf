@@ -55,6 +55,7 @@ resource "azurerm_subnet" "greenroad" {
   resource_group_name  = azurerm_resource_group.greenroad.name # Associate with the defined resource group
   virtual_network_name = azurerm_virtual_network.greenroad.name # Specify the virtual network
   address_prefixes     = ["10.0.1.0/24"]            # CIDR block for the subnet
+  depends_on = [azurerm_virtual_network.greenroad] # Terraform is its ability to have dependencies between resources, and even data sources.
 }
 
 # Define a public IP address for NAT Gateway
