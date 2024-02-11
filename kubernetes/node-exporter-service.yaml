@@ -1,0 +1,13 @@
+# node-exporter-service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-exporter  # Name of the Service
+spec:
+  selector:
+    app: node-exporter  # Selector to match pods for which traffic should be routed
+  ports:
+  - protocol: TCP
+    port: 9100  # Port on which the service will listen
+    targetPort: 9100  # Port on which traffic will be forwarded to pods
